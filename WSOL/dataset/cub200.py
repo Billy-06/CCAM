@@ -30,7 +30,9 @@ class CUB200(torch.utils.data.Dataset):
         _test_parts, list np.array.
         _test_boxes, list np.array.
     """
-    def __init__(self, root, input_size, crop_size, train=True, transform=None, iaa_aug=False, resize=256):
+    def __init__(self, root, input_size, crop_size, train=True, transform=None, iaa_aug=False, resize=256,
+        # crop_image=False
+    ):
         """
         Load the dataset.
 
@@ -219,12 +221,12 @@ if __name__ == '__main__':
     ])
 
     # wrap to dataset
-    test_data = CUB200(root='/data1/xjheng/dataset/cub-200-2011/', input_size=256, crop_size=224, train=False, transform=test_transforms)
+    test_data = CUB200(root='/home/billymicoder/Documents/GitHub/BillyCCAM/CCAM/data/images/CUB_200_2011/', input_size=256, crop_size=224, train=False, transform=test_transforms)
     print(len(test_data))
 
     # wrap to dataloader
     test_loader = torch.utils.data.DataLoader(
-        test_data, batch_size=1, shuffle=False,
+        test_data, batch_size=10, shuffle=False,
         num_workers=1, pin_memory=True)
 
     for i, (input, target, boxes, cls_name, img_name) in enumerate(test_loader):

@@ -126,10 +126,10 @@ if __name__ == '__main__':
     ])
 
     # wrap to dataset
-    test_data = ILSVRC2012(root='/data1/xjheng/dataset/ILSVRC2012', input_size=256, crop_size=224, train=False, transform=test_transforms)
+    test_data = ILSVRC2012(root='/home/billymicoder/Documents/GitHub/BillyCCAM/CCAM/data/images/ILSVRC2012', input_size=256, crop_size=224, train=False, transform=test_transforms)
     print(len(test_data))
 
-    # train_data = ILSVRC2012(root='/data2/xjheng/dataset/ILSVRC2012', train=True, transform=test_transforms)
+    # train_data = ILSVRC2012(root='/home/billymicoder/Documents/GitHub/BillyCCAM/CCAM/data/images/CUB_200_2011/ILSVRC2012', train=True, transform=test_transforms)
     # print(len(train_data))
     # [tensor([[63.6444, 35.5793, 167.7511, 177.8015],
     #          [-16.0000, 63.2652, 34.3467, 196.3852]])]

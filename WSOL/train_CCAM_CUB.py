@@ -29,17 +29,23 @@ def parse_arg():
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--lr', type=float, default=0.0001)
     parser.add_argument('--alpha', type=float, default=0.05)
+    # Add a parameter that sets whether the images should be cropped or not
+    parser.add_argument('--crop', type=bool, default=False, help="apply image crop or not")
     parser.add_argument('--experiment', type=str, required=True, help='record different experiments')
     parser.add_argument('--pretrained', type=str, required=True, help='adopt different pretrained parameters, [supervised, mocov2, detco]')
 
     args = parser.parse_args()
 
     with open(args.cfg, 'r') as f:
-        # config = yaml.load(f, Loader=yaml.FullLoader)
-        config = yaml.load(f)
+        config = yaml.load(f, Loader=yaml.FullLoader)
+
+        # config = yaml.load(f) #changed to full_load()
+        # config = yaml.full_load(f)
         config = edict(config)
     config.EXPERIMENT = args.experiment
     config.LR = args.lr
+    # Add a parameter that sets whether the images should be cropped or not
+    config.CROP = args.crop
     config.BATCH_SIZE = args.batch_size
     config.PRETRAINED = args.pretrained
 
@@ -66,6 +72,12 @@ def main():
 
     # log
     sys.stdout = Logger('{}/{}_log.txt'.format(config.LOG_DIR, config.EXPERIMENT))
+
+    # Check if the crop parameter is true then set the crop directory
+    if config.CROP:
+        print("=> using crop augmentation...")
+
+        sys.stdout = Logger('{}/{}/'.format(config.CROP_DIR, config.EXPERIMENT))
 
     # create model
     print("=> creating model...")
@@ -182,6 +194,7 @@ def train(config, train_loader, model, criterion, optimizer, epoch, scheduler):
 
         optimizer.zero_grad()
         fg_feats, bg_feats, ccam = model(input)
+
 
         loss1 = criterion[0](bg_feats)
         loss2 = criterion[1](bg_feats, fg_feats)

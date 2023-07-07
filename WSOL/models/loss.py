@@ -31,6 +31,8 @@ def l2_distance(embedded_fg, embedded_bg):
     return torch.pow(embedded_fg - embedded_bg, 2).sum(2) / C
 
 # Minimize Similarity, e.g., push representation of foreground and background apart.
+# Negative Pair Loss => L(neg) = -i/n^2 ()
+# Lneg = −1/n^2 Sum n i=1 Sum n j=1 log(1 − s neg i,j ), 
 class SimMinLoss(nn.Module):
     def __init__(self, margin=0.15, metric='cos', reduction='mean'):
         super(SimMinLoss, self).__init__()
@@ -59,6 +61,7 @@ class SimMinLoss(nn.Module):
 
 
 # Maximize Similarity, e.g., pull representation of background and background together.
+# Positive Pair Loss
 class SimMaxLoss(nn.Module):
     def __init__(self, metric='cos', alpha=0.25, reduction='mean'):
         super(SimMaxLoss, self).__init__()

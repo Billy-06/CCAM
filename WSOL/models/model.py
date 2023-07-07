@@ -19,6 +19,7 @@ class ResNetSeries(nn.Module):
         if pretrained == 'supervised':
             print(f'Loading supervised pretrained parameters!')
             model = resnet50(pretrained=True)
+            
         elif pretrained == 'mocov2':
             print(f'Loading unsupervised {pretrained} pretrained parameters!')
             model = resnet50(pretrained=False)

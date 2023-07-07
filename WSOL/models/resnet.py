@@ -54,17 +54,55 @@ class Bottleneck(nn.Module):
     def __init__(self, inplanes, planes, stride=1, downsample=None):
         super(Bottleneck, self).__init__()
         self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
+        """
+        A 1x1 convolutional layer (self.conv1) with inplanes input channels and planes 
+        output channels is defined.
+        """
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=stride,
-                               padding=1, bias=False)
+        """
+        A batch normalization layer (self.bn1) is defined for the output of self.conv1.
+        """
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
+        """      
+        A 3x3 convolutional layer (self.conv2) with planes input channels, planes output 
+        channels, and stride 'stride' is defined.
+        """
         self.bn2 = nn.BatchNorm2d(planes)
+        """
+        A batch normalization layer (self.bn2) is defined for the output of self.conv2.
+        """
         self.conv3 = nn.Conv2d(planes, planes * self.expansion, kernel_size=1, bias=False)
+        """
+        A 1x1 convolutional layer (self.conv3) with planes input channels 
+        and planes * self.expansion output channels is defined.
+        """
         self.bn3 = nn.BatchNorm2d(planes * self.expansion)
+        """
+        A batch normalization layer (self.bn3) is defined for the output of self.conv3.
+        """
         self.relu = nn.ReLU(inplace=True)
+        """
+        A ReLU activation function (self.relu) is defined.
+        """
         self.downsample = downsample
         self.stride = stride
 
     def forward(self, x):
+        """
+            The Forward Pass
+            ---------------- 
+            Steps:
+             
+            - The input tensor x is saved as residual.
+            - x is passed through self.conv1, self.bn1, and self.relu.
+            - The result is passed through self.conv2, self.bn2, and self.relu.
+            - The result is passed through self.conv3 and self.bn3.
+            
+            - If self.downsample is not None, residual is passed through self.downsample.
+            - The output of the previous step is added to out.
+            - The result is passed through self.relu.
+            - The result is returned. 
+        """
         residual = x
 
         out = self.conv1(x)
@@ -129,8 +167,7 @@ class ResNet(nn.Module):
     def __init__(self, block, layers, stride=None):
         self.inplanes = 64
         super(ResNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
-                               bias=False)
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
